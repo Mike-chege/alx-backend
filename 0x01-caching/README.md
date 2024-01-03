@@ -1,6 +1,6 @@
 ## :file_folder: Caching
 
-This project covers the Python Caching System:
+This project covers the Python Caching System.
 
 ## :scroll: That is
 - What a caching system is
