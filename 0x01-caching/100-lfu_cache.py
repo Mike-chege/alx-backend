@@ -14,38 +14,50 @@ class LFUCache(BaseCaching):
     """
     def __init__(self):
         """
-        Initialize the class instance
+        Initialize the class
         """
         super().__init__()
-        self.cache_data = OrderedDict()
-        self.mru = ""
+        self.lru_cache = OrderedDict()
+        self.lfu_cache = {}
 
     def put(self, key, item):
         """
         Updates an item
         In the cache
         """
-        if key and item:
-            if len(self.cache_data) >= BaseCaching.MAX_ITEMS:
-                if key in self.cache_data:
-                    self.cache_data.update({key: item})
-                    self.mru = key
-                else:
-                    # discard the most recently used item
-                    discarded = self.mru
-                    del self.cache_data[discarded]
-                    print("DISCARD: {}".format(discarded))
-                    self.cache_data[key] = item
-                    self.mru = key
+        if key in self.lru_cache:
+            del self.lru_cache[key]
+        if len(self.lru_cache) > BaseCaching.MAX_ITEMS - 1:
+            min_value = min(self.lfu_cache.values())
+            lfu_keys = [k for k, v in self.lfu_cache.items() if v == min_value]
+            if len(lfu_keys) == 1:
+                print("DISCARD:", lfu_keys[0])
+                self.lru_cache.pop(lfu_keys[0])
+                del self.lfu_cache[lfu_keys[0]]
             else:
-                self.cache_data[key] = item
-                self.mru = key
+                for k, _ in list(self.lru_cache.items()):
+                    if k in lfu_keys:
+                        print("DISCARD:", k)
+                        self.lru_cache.pop(k)
+                        del self.lfu_cache[k]
+                        break
+        self.lru_cache[key] = item
+        self.lru_cache.move_to_end(key)
+        if key in self.lfu_cache:
+            self.lfu_cache[key] += 1
+        else:
+            self.lfu_cache[key] = 1
+        self.cache_data = dict(self.lru_cache)
 
     def get(self, key):
         """
-        Gets an
-        Item by key
+        Gets the key value
         """
-        if key in self.cache_data:
-            self.mru = key
-            return self.cache_data[key]
+        if key in self.lru_cache:
+            value = self.lru_cache[key]
+            self.lru_cache.move_to_end(key)
+            if key in self.lfu_cache:
+                self.lfu_cache[key] += 1
+            else:
+                self.lfu_cache[key] = 1
+            return value
