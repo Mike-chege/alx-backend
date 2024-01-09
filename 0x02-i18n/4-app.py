@@ -4,6 +4,7 @@ Forcing a particular locale by passing the locale=fr
 Parameter to the app’s URLs.
 """
 
+
 from flask import Flask, render_template, request
 from flask_babel import Babel
 
@@ -13,31 +14,30 @@ babel = Babel(app)
 
 class Config(object):
     """
-    Available languages class
+    Class config
     """
     LANGUAGES = ['en', 'fr']
-    # these are the inherent defaults just btw
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-# set the above class object as the configuration for the app
 app.config.from_object('4-app.Config')
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index() -> str:
-    """ GET /
-    Return:
-      - 4-index.html
+    """
+    GET / and return 4-index.html
     """
     return render_template('4-index.html')
 
 
 @babel.localeselector
 def get_locale() -> str:
-    """ Determines best match for supported languages """
-    # check if there is a locale parameter/query string
+    """
+    Determines best match
+    For supported languages
+    """
     if request.args.get('locale'):
         locale = request.args.get('locale')
         if locale in app.config['LANGUAGES']:
