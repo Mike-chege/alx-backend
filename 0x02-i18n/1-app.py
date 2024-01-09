@@ -6,31 +6,31 @@ Instatiating Babel object
 from flask import Flask, render_template
 from flask_babel import Babel
 
-babel = Babel(app)
 app = Flask(__name__)
+babel = Babel(app)
+"""Instantiate the Babel object"""
 
 
 class Config(object):
     """
-    Configuring available languages
+    Config class
     """
     LANGUAGES = ['en', 'fr']
-    # Inherent defaults
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-# Sets the class config as the configuration for the app
-app.config.from_object('1-app.Config')
+app.config.from_object(Config)
+"""Use the class as config for Flask app"""
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
-def index() -> str:
+@app.route('/')
+def root():
     """
-    GET / route and return 1-index.html
+    The Flask app
     """
-    return render_template('1-index.html')
+    return render_template("1-index.html")
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000")
+    app.run()
