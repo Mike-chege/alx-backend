@@ -24,11 +24,11 @@ app.config.from_object('1-app.config')
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
-def index():
+def index() -> str:
     """
-    Get / route then return 0-index.html
+    Get / route then return 1-index.html
     """
-    return render_template('0-index.html')
+    return render_template('1-index.html')
 
 
 if __name__ == "__main__":
