@@ -12,21 +12,22 @@ app = Flask(__name__)
 
 class Config(object):
     """
-    Configure available languages for the app
+    Configuring available languages
     """
     LANGUAGES = ['en', 'fr']
     # Inherent defaults
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
-# Sets class config as the configuration for the app
-app.config.from_object('1-app.config')
+
+# Sets the class config as the configuration for the app
+app.config.from_object('1-app.Config')
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index() -> str:
     """
-    Get / route then return 1-index.html
+    GET / route and return 1-index.html
     """
     return render_template('1-index.html')
 
